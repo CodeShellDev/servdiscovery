@@ -178,8 +178,7 @@ def main():
         # Check if there is actually any Diff
         if globalDiff.get("removed").__len__() + globalDiff.get("added").__len__() <= 0:
             logger.debug("No Changes were made, skipping...")
-
-            return
+            continue
         
         logger.info(f"Sending Diff to {ENDPOINT} with{"out" if not ENDPOINT_KEY else ""} Auth")
 
