@@ -184,8 +184,8 @@ def main():
 
         response = sendDiffToEndpoint(globalDiff)
 
-        if not response.ok:
-            logger.error(f"Endpoint responded with {response.status_code} NOT OK")
+        if response:
+            logger.error(f"Endpoint responded with {response.text} {response.status_code} {"OK" if response.ok else "NOT OK"}")
 
 if __name__ == '__main__':
     logger.setLevel(level=LOG_LEVEL)
