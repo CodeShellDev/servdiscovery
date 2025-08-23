@@ -105,6 +105,8 @@ def updateEnabledContainers():
             containersToHosts[container.id] = hosts
         else:
             logger.debug(f"Added {container.name}")
+
+            diffs.get("added").extend(hosts)
             
             containersToHosts[container.id] = hosts
 
