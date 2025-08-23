@@ -186,10 +186,7 @@ def main():
 
         response = sendDiffToEndpoint(globalDiff)
 
-        if response:
-            logger.debug(f"Endpoint responded with {response.text} {response.status_code} {"OK" if response.ok else "NOT OK"}")
-        else:
-            logger.error(f"Endpoint did not respond")
+        logger.debug(f"Endpoint responded with {response.text} {response.status_code} {"OK" if response.ok else "NOT OK"}")
 
 if __name__ == '__main__':
     logger.setLevel(level=LOG_LEVEL)
