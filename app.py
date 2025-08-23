@@ -76,10 +76,10 @@ def updateEnabledContainers():
 
     containerDiff = getDiff(containers, newContainers)
 
-    logger.info(f"Found {newContainers.count()} Containers")
+    logger.info(f"Found {newContainers.__len__()} Containers")
 
-    logger.debug(f"Found {containerDiff.get("added").count()} added Containers")
-    logger.debug(f"Found {containerDiff.get("removed").count()} removed Containers")
+    logger.debug(f"Found {containerDiff.get("added").__len__()} added Containers")
+    logger.debug(f"Found {containerDiff.get("removed").__len__()} removed Containers")
 
     # Threading
     # with containerToHostLock and containerLock:
@@ -174,7 +174,7 @@ def main():
         globalDiff = cleanDiff(globalDiff)
 
         # Check if there is actually any Diff
-        if globalDiff.get("removed").count() + globalDiff.get("added").count() <= 0:
+        if globalDiff.get("removed").__len__() + globalDiff.get("added").__len__() <= 0:
             logger.debug("No Changes were made, skipping...")
 
             return
