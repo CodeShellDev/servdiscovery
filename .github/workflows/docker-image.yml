@@ -1,0 +1,13 @@
+name: Build & Push Image
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update:
+    uses: codeshelldev/gh-actions/.github/workflows/docker-image.yml@main
+    with:
+      registry: ghcr.io
+    secrets:
+      GH_PCKG_TOKEN: ${{ secrets.GH_PCKG_TOKEN }}

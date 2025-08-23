@@ -1,0 +1,21 @@
+name: Build & Push Dev Image
+
+on:
+  push:
+    branches:
+      - dev
+    paths-ignore:
+      - ".**"
+
+jobs:
+  update:
+    uses: codeshelldev/gh-actions/.github/workflows/docker-image.yml@main
+    with:
+      registry: ghcr.io
+      flavor: |
+        latest=false
+      tags: |
+        type=sha
+        type=raw,value=latest-dev
+    secrets:
+      GH_PCKG_TOKEN: ${{ secrets.GH_PCKG_TOKEN }}

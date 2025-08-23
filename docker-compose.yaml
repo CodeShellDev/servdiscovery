@@ -1,0 +1,10 @@
+services:
+  discovery:
+    image: ghcr.io/codeshelldev/servdiscovery:latest
+    container_name: service-discovery
+    environment:
+      ENDPOINT: https://mydomain.com/ENDPOINT
+      ENDPOINT_KEY: MY_VERY_SECURE_KEY
+      SERVER_NAME: server-1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

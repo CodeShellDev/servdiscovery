@@ -1,0 +1,15 @@
+{
+	"serverName": "server-1",
+	"diff": {
+		"added": [
+			"whoami.mydomain.com",
+			"website.mydomain.com",
+			"auth.mydomain.com"
+		],
+		"removed": [
+			"whoami-backup.mydomain.com",
+			"website-backup.mydomain.com",
+			"auth-backup.mydomain.com"
+		]
+	}
+}
