@@ -66,6 +66,7 @@ def updateEnabledContainers():
         "added": []
     }
 
+    global containers
     newContainers = []
 
     try:
