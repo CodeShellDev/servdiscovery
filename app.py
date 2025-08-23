@@ -143,7 +143,7 @@ def exitContainer():
     os.kill(os.getpid(), signal.SIGTERM)
 
 def sendDiffToEndpoint(diff):
-    data =  { "server": SERVER_NAME, "diff": diff }
+    data =  { "serverName": SERVER_NAME, "diff": diff }
 
     headers = {}
     
