@@ -10,7 +10,16 @@ ServDiscovery is a Discovery Service that keeps an Endpoint updated with active 
 Get the latest `docker-compose.yaml` file:
 
 ```yaml
-{ { file.docker-compose.yaml } }
+services:
+  discovery:
+    image: ghcr.io/codeshelldev/servdiscovery:latest
+    container_name: service-discovery
+    environment:
+      ENDPOINT: https://mydomain.com/ENDPOINT
+      ENDPOINT_KEY: MY_VERY_SECURE_KEY
+      SERVER_NAME: server-1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 ```
 
 ```bash
@@ -22,7 +31,27 @@ docker compose up -d
 Take this little `whoami` Container as an Example:
 
 ```yaml
-{ { file.examples/whoami.docker-compose.yaml } }
+services:
+  whoami:
+    image: traefik/whoami:latest
+    container_name: whoami
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.whoami.rule=Host(`whoami.mydomain.com`)
+      - traefik.http.routers.whoami.entrypoints=websecure
+      - traefik.http.routers.whoami.tls=true
+      - traefik.http.routers.whoami.tls.certresolver=cloudflare
+      - traefik.http.routers.whoami.service=whoami-svc
+      - traefik.http.services.whoami-svc.loadbalancer.server.port=80
+      # Enable Discovery on this Container
+      - discovery.enable=true
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
+    
 ```
 
 Whenever a new **Host-Rule** gets added / modified ServDiscovery will update the set Endpoint to notify of any new changes.
@@ -33,7 +62,21 @@ This way the Endpoint can correctly route to different Hosts based on **SNI / Ho
 ServDiscovery sends requests to the Endpoint as a **JSON HTTP Request**:
 
 ```json
-{ { file.examples/payload.json } }
+{
+	"serverName": "server-1",
+	"diff": {
+		"added": [
+			"whoami.mydomain.com",
+			"website.mydomain.com",
+			"auth.mydomain.com"
+		],
+		"removed": [
+			"whoami-backup.mydomain.com",
+			"website-backup.mydomain.com",
+			"auth-backup.mydomain.com"
+		]
+	}
+}
 ```
 
 This example tell the Endpoint that...
