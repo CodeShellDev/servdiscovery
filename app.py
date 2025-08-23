@@ -43,7 +43,7 @@ def getDiff(old, new):
     old_set, new_set = set(old), set(new)
     
     removed = old_set - new_set
-    added   = new_set - old_set
+    added = new_set - old_set
 
     return {
         "removed": list(removed),
@@ -123,14 +123,16 @@ def updateEnabledContainers():
     return diffs
 
 def cleanDiff(diff):
-    both = diff.get("removed") and diff.get("added")
+    removed, added = set(diff.get("removed")), set(diff.get("added"))
+
+    both = removed & added
 
     removed -= both
     added -= both
 
     return {
-        removed: list(removed),
-        added: list(added)
+        "removed": list(removed),
+        "added": list(added)
     }
 
 def exitContainer():
