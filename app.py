@@ -46,8 +46,8 @@ def getDiff(old, new):
     added   = new_set - old_set
 
     return {
-        removed: list(removed),
-        added: list(added)
+        "removed": list(removed),
+        "added": list(added)
     }
 
 def getHostsFromLabels(labels):
