@@ -80,13 +80,15 @@ ServDiscovery sends requests to the Endpoint as a **JSON HTTP Request**:
 }
 ```
 
-This example tell the Endpoint that...
+This example tells the Endpoint that...
 
 | Available            | Unavailable                 |
 | -------------------- | --------------------------- |
 | whoami.mydomain.com  | whoami-backup.mydomain.com  |
 | website.mydomain.com | website-backup.mydomain.com |
 | auth.mydomain.com    | auth-backup.mydomain.com    |
+
+... is (un)available
 
 This way (if the Endpoint is used by a LoadBalancer) the Owner of the Endpoint can now delete the `*-backup.mydomain.com` records from a Registry,
 thus updating the list of routable Containers / Services.
