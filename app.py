@@ -29,6 +29,9 @@ ENDPOINT = os.getenv("ENDPOINT")
 ENDPOINT_KEY = os.getenv("ENDPOINT_KEY")
 
 DISCOVERY_INTERVAL = os.getenv("DISCOVERY_INTERVAL")
+FULL_DISCOVERY_INTERVAL = os.getenv("FULL_DISCOVERY_INTERVAL")
+
+fullDiscoveryRatio = 0
 
 dockerClient = DockerClient(base_url="unix://var/run/docker.sock")
 
@@ -60,19 +63,25 @@ def getHostsFromLabels(labels):
 
     return hosts
 
-def updateEnabledContainers():
-    diffs = {
-        "removed": [],
-        "added": []
-    }
-
-    global containers
+def getEnabledContainers():
     newContainers = []
 
     try:
         newContainers = dockerClient.containers.list(filters={"label": "discovery.enable=true"})
     except Exception as e:
         logger.error(f"Error fetching containers: {str(e)}")
+
+    return newContainers
+
+def getDiscovery():
+    diffs = {
+        "removed": [],
+        "added": []
+    }
+
+    global containers
+
+    newContainers = getEnabledContainers()
 
     containerDiff = getDiff(containers, newContainers)
 
@@ -124,6 +133,23 @@ def updateEnabledContainers():
 
     return diffs
 
+def getFullDiscovery():
+    diffs = {
+        "removed": [],
+        "added": []
+    }
+
+    newContainers = getEnabledContainers()
+
+    logger.info(f"Found {newContainers.__len__()} Containers")
+
+    for container in newContainers:
+        hosts = getHostsFromLabels(container.labels)
+
+        diffs.get("added").extend(hosts)
+
+    return diffs
+
 def cleanDiff(diff):
     removed, added = set(diff.get("removed")), set(diff.get("added"))
 
@@ -163,21 +189,49 @@ def sendDiffToEndpoint(diff):
 #   thread = threading.Thread(target=main, daemon=True)
 #   thread.start()
 
+def doDiscovery():
+    logger.debug("Starting Discovery")
+
+    globalDiff = getDiscovery()
+
+    logger.debug("Cleaning Diff")
+
+    return cleanDiff(globalDiff)
+
+def doFullDiscovery():
+    logger.debug("Starting Full Discovery")
+
+    globalDiff = getFullDiscovery()
+
+    return globalDiff
+
 def main():
+    i = 0
     while True:
-        logger.info(f"Starting Discover in {DISCOVERY_INTERVAL}...")
+        isFullDiscovery = False
+
+        if i == fullDiscoveryRatio:
+            isFullDiscovery = True
+            i = 0
+
+        if not isFullDiscovery:
+            logger.info(f"Starting Discover in {DISCOVERY_INTERVAL}...")
+        else:
+            logger.info(f"Starting Full Discover in {DISCOVERY_INTERVAL}...")
 
         sleep(DISCOVERY_INTERVAL)
-        
-        logger.info("Starting Discovery")
 
-        globalDiff = updateEnabledContainers()
+        globalDiff = {
+            "removed": [],
+            "added": []
+        }
 
-        logger.debug("Cleaning Diff")
+        if not isFullDiscovery:
+            globalDiff = doDiscovery()
+        else:
+            globalDiff = doFullDiscovery()
 
-        globalDiff = cleanDiff(globalDiff)
-
-        # Check if there is actually any Diff
+        # Check if there are any Changes
         if globalDiff.get("removed").__len__() + globalDiff.get("added").__len__() <= 0:
             logger.debug("No Changes were made, skipping...")
             continue
@@ -187,6 +241,8 @@ def main():
         response = sendDiffToEndpoint(globalDiff)
 
         logger.debug(f"Endpoint responded with {response.text} {response.status_code} {"OK" if response.ok else "NOT OK"}")
+
+        i += 1
 
 if __name__ == '__main__':
     logger.setLevel(level=LOG_LEVEL)
@@ -202,6 +258,17 @@ if __name__ == '__main__':
     if not DISCOVERY_INTERVAL:
         logger.warning(f"No DISCOVERY_INTERVAL set, using 30sec as default")
         DISCOVERY_INTERVAL = 30
+
+    if not FULL_DISCOVERY_INTERVAL:
+        logger.warning(f"No FULL_DISCOVERY_INTERVAL set, disregarding Full Discoveries")
+        FULL_DISCOVERY_INTERVAL = 0
+    elif FULL_DISCOVERY_INTERVAL % DISCOVERY_INTERVAL != 0:
+        logger.warning(f"FULL_DISCOVERY_INTERVAL is not a valid Integer, rounding to nearest Int")
+        FULL_DISCOVERY_INTERVAL = round(FULL_DISCOVERY_INTERVAL)
+
+    if FULL_DISCOVERY_INTERVAL != 0:
+        fullDiscoveryRatio = FULL_DISCOVERY_INTERVAL / DISCOVERY_INTERVAL
+        logger.debug(f"FULL_DISCOVERY_INTERVAL ratio set to {fullDiscoveryRatio}")
 
     if not ENDPOINT_KEY or ENDPOINT_KEY == "":
         logger.warning(f"No ENDPOINT_KEY set, requests may be denied")

@@ -56,7 +56,22 @@ If no Key is provided ServDiscovery will leave out the Authorization Header.
 
 ### DISCOVERY_INTERVAL
 
-The Discovery Interval sets the Interval of which ServDiscovery will update the Endpoint, etc.
+The Discovery Interval sets the Interval (in seconds) of which ServDiscovery will update the provided Endpoint.
+
+Default: `60`
+
+### FULL_DISCOVERY_INTERVAL
+
+Sets the Interval for Full Disoveries.
+This tells ServDiscovery to send a Full Update of all the activate Containers in the `added` JSON Key.
+
+> [!IMPORTANT]
+> Must be set to a **fraction of** DISCOVERY_INTERVAL.
+> (example: `DISCOVERY_INTERVAL * 2`)
+> `FULL_DISCOVERY_INTERVAL / DISCOVERY_INTERVAL` must result in an int.
+> `FULL_DISCOVERY_INTERVAL` must be bigger than `DISCOVERY_INTERVAL`.
+
+Default: **Disabled**
 
 ## Contributing
 
