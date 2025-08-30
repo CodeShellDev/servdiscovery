@@ -272,7 +272,7 @@ if __name__ == '__main__':
         FULL_DISCOVERY_INTERVAL = round(FULL_DISCOVERY_INTERVAL)
 
     if FULL_DISCOVERY_INTERVAL != 0:
-        fullDiscoveryRatio = FULL_DISCOVERY_INTERVAL / DISCOVERY_INTERVAL
+        fullDiscoveryRatio = round(FULL_DISCOVERY_INTERVAL / DISCOVERY_INTERVAL)
         logger.debug(f"FULL_DISCOVERY_INTERVAL ratio set to {fullDiscoveryRatio}")
 
     if not ENDPOINT_KEY or ENDPOINT_KEY == "":
