@@ -214,6 +214,8 @@ def main():
             isFullDiscovery = True
             i = 0
 
+        i += 1
+
         if not isFullDiscovery:
             logger.info(f"Starting Discover in {DISCOVERY_INTERVAL}...")
         else:
@@ -241,8 +243,6 @@ def main():
         response = sendDiffToEndpoint(globalDiff)
 
         logger.debug(f"Endpoint responded with {response.text} {response.status_code} {"OK" if response.ok else "NOT OK"}")
-
-        i += 1
 
 if __name__ == '__main__':
     logger.setLevel(level=LOG_LEVEL)
