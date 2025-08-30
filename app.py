@@ -258,11 +258,16 @@ if __name__ == '__main__':
     if not DISCOVERY_INTERVAL:
         logger.warning(f"No DISCOVERY_INTERVAL set, using 30sec as default")
         DISCOVERY_INTERVAL = 30
+    else:
+        DISCOVERY_INTERVAL = int(DISCOVERY_INTERVAL)
 
     if not FULL_DISCOVERY_INTERVAL:
         logger.warning(f"No FULL_DISCOVERY_INTERVAL set, disregarding Full Discoveries")
         FULL_DISCOVERY_INTERVAL = 0
-    elif FULL_DISCOVERY_INTERVAL % DISCOVERY_INTERVAL != 0:
+    else:
+        FULL_DISCOVERY_INTERVAL = int(FULL_DISCOVERY_INTERVAL)
+
+    if FULL_DISCOVERY_INTERVAL % DISCOVERY_INTERVAL != 0:
         logger.warning(f"FULL_DISCOVERY_INTERVAL is not a valid Integer, rounding to nearest Int")
         FULL_DISCOVERY_INTERVAL = round(FULL_DISCOVERY_INTERVAL)
 
