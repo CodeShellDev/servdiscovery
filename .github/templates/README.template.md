@@ -5,7 +5,7 @@ ServDiscovery is a Discovery Service that keeps an Endpoint updated with active 
 ## Installation
 
 > [!NOTE]
-> ServDiscovery only works with Traefik and not with **any** other Reverse Proxy due to `discovery.enable` label
+> ServDiscovery only works with Traefik and not with **any** other Reverse Proxy due to `traefik.http.routers.router.rule` label
 
 Get the latest `docker-compose.yaml` file:
 
