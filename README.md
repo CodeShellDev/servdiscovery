@@ -5,11 +5,12 @@ ServDiscovery is a Discovery Service that keeps an Endpoint updated with active 
 ## Installation
 
 > [!NOTE]
-> ServDiscovery only works with Traefik and not with **any** other Reverse Proxy due to `discover.enable` lable
+> ServDiscovery only works with Traefik and not with **any** other Reverse Proxy due to `discovery.enable` label
 
 Get the latest `docker-compose.yaml` file:
 
 ```yaml
+{
 services:
   discovery:
     image: ghcr.io/codeshelldev/servdiscovery:latest
@@ -51,7 +52,6 @@ services:
 networks:
   traefik:
     external: true
-    
 ```
 
 Whenever a new **Host-Rule** gets added / modified ServDiscovery will update the set Endpoint to notify of any new changes.
