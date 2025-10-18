@@ -5,12 +5,13 @@ ServDiscovery is a Discovery Service that keeps an Endpoint updated with active 
 ## Installation
 
 > [!NOTE]
-> ServDiscovery only works with Traefik and not with **any** other Reverse Proxy due to `discover.enable` lable
+> ServDiscovery only works with Traefik and not with **any** other Reverse Proxy due to `discovery.enable` lable
 
 Get the latest `docker-compose.yaml` file:
 
 ```yaml
-{ { file.docker-compose.yaml } }
+{
+{{{ #://docker-compose.yaml }}}
 ```
 
 ```bash
@@ -22,7 +23,7 @@ docker compose up -d
 Take this little `whoami` Container as an Example:
 
 ```yaml
-{ { file.examples/whoami.docker-compose.yaml } }
+{{{ #://examples/whoami.docker-compose.yaml }}}
 ```
 
 Whenever a new **Host-Rule** gets added / modified ServDiscovery will update the set Endpoint to notify of any new changes.
@@ -33,7 +34,7 @@ This way the Endpoint can correctly route to different Hosts based on **SNI / Ho
 ServDiscovery sends requests to the Endpoint as a **JSON HTTP Request**:
 
 ```json
-{ { file.examples/payload.json } }
+{{{ #://examples/payload.json }}}
 ```
 
 This example tell the Endpoint that...
