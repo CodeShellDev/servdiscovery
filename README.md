@@ -10,7 +10,6 @@ ServDiscovery is a Discovery Service that keeps an Endpoint updated with active 
 Get the latest `docker-compose.yaml` file:
 
 ```yaml
-{
 services:
   discovery:
     image: ghcr.io/codeshelldev/servdiscovery:latest
