@@ -76,7 +76,10 @@ func GetAliveDiscovery() Diff[string] {
 func SendDiff(serverName, endpoint, key string, diff Diff[string]) (*http.Response, error) {
 	payload := map[string]any{
 		"serverName": serverName,
-		"diff": diff,
+		"diff": map[string]any{
+			"added": diff.Added,
+			"removed": diff.Removed,
+		},
 	}
 
 	data, err := jsonutils.ToJsonSafe(payload)
