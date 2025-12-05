@@ -21,6 +21,8 @@ func main() {
 		log.Dev("Welcome back Developer!")
 	}
 
+	docker.Init()
+
 	config.Log()
 
 	var wg sync.WaitGroup
