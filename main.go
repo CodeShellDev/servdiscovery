@@ -25,6 +25,8 @@ func main() {
 
 	config.Log()
 
+	docker.InitClient()
+
 	var wg sync.WaitGroup
 	wg.Add(2)
 
