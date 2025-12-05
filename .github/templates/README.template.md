@@ -1,3 +1,13 @@
+<img align="center" width="1048" height="512" alt="Dynamic service Discovery" src="https://github.com/CodeShellDev/secured-signal-api/raw/refs/heads/main/logo/banner.png" />
+
+<p align="center">
+dynamic service discovery, container syncing, automatic updates
+</p>
+
+<p align="center">
+⚡ Real-time · 🔄 Automatic · 🚀 Easy to Deploy
+</p>
+
 <div align="center">
   <a href="https://github.com/codeshelldev/servdiscovery/releases">
     <img 
@@ -30,10 +40,6 @@
     >
   </a>
 </div>
-
-# ServDiscovery
-
-**ServDiscovery** is a dynamic **Discovery Service** that keeps your endpoints in sync with active hosts of your services — perfect for modern, containerized environments. Think of it as the bridge between your services and your reverse proxy, ensuring traffic always finds the right destination.
 
 ## Installation
 
