@@ -16,18 +16,20 @@ var ENV = &structure.ENV{
 func Load() {
 	ENV.LOG_LEVEL = os.Getenv("LOG_LEVEL")
 
-	discoveryInterval, err := strconv.Atoi(os.Getenv("DISCOVERY_INTERVAL"))
+	discoveryIntervalStr := os.Getenv("DISCOVERY_INTERVAL")
 
-	if err != nil {
-		if discoveryInterval > 0 {
+	if discoveryIntervalStr != "" {
+		discoveryInterval, err := strconv.Itoa(discoveryIntervalStr)
+		if err != nil {
 			ENV.DISCOVERY_INTERVAL = discoveryInterval
 		}
 	}
 
-	aliveInterval, err := strconv.Atoi(os.Getenv("ALIVE_INTERVAL"))
+	aliveIntervalStr := os.Getenv("ALIVE_INTERVAL")
 
-	if err != nil {
-		if aliveInterval > 0 {
+	if aliveIntervalStr != "" {
+		aliveInterval, err := strconv.Itoa(aliveIntervalStr)
+		if err != nil {
 			ENV.ALIVE_INTERVAL = aliveInterval
 		}
 	}
