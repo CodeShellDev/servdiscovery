@@ -48,9 +48,10 @@ services:
     image: ghcr.io/codeshelldev/servdiscovery:latest
     container_name: service-discovery
     environment:
-      ENDPOINT: https://mydomain.com/ENDPOINT
+      ENDPOINT: https://mydomain.com/discover
       ENDPOINT_KEY: MY_VERY_SECURE_KEY
-      ALIVE_UPDATE_INTERVAL: 60
+      DISCOVERY_INTERVAL: 60
+      ALIVE_INTERVAL: 60
       SERVER_NAME: server-1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
