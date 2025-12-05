@@ -15,13 +15,13 @@ func main() {
 
 	log.Init(config.ENV.LOG_LEVEL)
 
+	docker.Init()
+
 	log.Info("Initialized Logger with Level of ", log.Level())
 
 	if log.Level() == "dev" {
 		log.Dev("Welcome back Developer!")
 	}
-
-	docker.Init()
 
 	config.Log()
 
