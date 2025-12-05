@@ -33,7 +33,7 @@
 
 # ServDiscovery
 
-**ServDiscovery** is a dynamic **Discovery Service** that keeps your endpoints in sync with active hosts of your services—perfect for modern, containerized environments. Think of it as the bridge between your services and your reverse proxy, ensuring traffic always finds the right destination.
+**ServDiscovery** is a dynamic **Discovery Service** that keeps your endpoints in sync with active hosts of your services — perfect for modern, containerized environments. Think of it as the bridge between your services and your reverse proxy, ensuring traffic always finds the right destination.
 
 ## Installation
 
