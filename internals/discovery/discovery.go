@@ -212,12 +212,20 @@ func getRouterHosts(container container.Summary) map[string][]string {
 		return nil
 	}
 
-	for key, value := range container.Labels {
-		router := routerRegex.FindString(key)
-		if router != "" {
-			hosts[router] = hostRegex.FindStringSubmatch(value)
-		}
-	}
+    for key, value := range container.Labels {
+        routerMatch := routerRegex.FindStringSubmatch(key)
+        if len(routerMatch) < 2 {
+            continue
+        }
+        router := routerMatch[1]
+
+        matches := hostRegex.FindAllStringSubmatch(value, -1)
+        for _, match := range matches {
+            if len(match) >= 2 {
+                hosts[router] = append(hosts[router], match[1])
+            }
+        }
+    }
 
 	return hosts
 }
