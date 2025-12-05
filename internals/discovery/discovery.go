@@ -146,7 +146,7 @@ func getContainerDiff() (Diff[string], error) {
 			logger.Info("Added ", container.Names[0])
 		}
 
-		containerHosts[container.ID] = hosts 
+		containerHosts[container.ID] = hosts
 	}
 
 	for _, removed := range containerDiff.Removed {
