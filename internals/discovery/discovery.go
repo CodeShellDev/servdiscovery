@@ -150,6 +150,8 @@ func getContainerDiff() (Diff[string], error) {
 		} else {
 			logger.Info("Added ", container.Names[0])
 
+			globalDiff.Added = append(globalDiff.Added, hosts...)
+
 			logger.Dev("!> With ", strings.Join(hosts, ","))
 		}
 
