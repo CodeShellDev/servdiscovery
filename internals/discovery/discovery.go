@@ -15,7 +15,7 @@ import (
 	"github.com/moby/moby/client"
 )
 
-var containerHosts map[string][]string
+var containerHosts = map[string][]string{}
 
 var containers []container.Summary
 
