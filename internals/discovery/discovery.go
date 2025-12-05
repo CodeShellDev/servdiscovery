@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"regexp"
 	"slices"
+	"strings"
 	"time"
 
 	"github.com/codeshelldev/gotl/pkg/jsonutils"
@@ -144,6 +145,8 @@ func getContainerDiff() (Diff[string], error) {
 			globalDiff.Merge(diff)
 		} else {
 			logger.Info("Added ", container.Names[0])
+
+			logger.Dev("!> With ", strings.Join(hosts, ","))
 		}
 
 		containerHosts[container.ID] = hosts
