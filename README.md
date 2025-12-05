@@ -38,7 +38,7 @@
 ## Installation
 
 > [!IMPORTANT]
-> ServDiscovery works **only with Traefik**. It will **not** work with other reverse proxies due to the `discovery.enable` label requirement.
+> ServDiscovery works **only with Traefik**. It will **not** work with other reverse proxies due to using traefik labels to determine routes.
 
 Get the latest `docker-compose.yaml`:
 
