@@ -56,7 +56,7 @@ Your discovery service is now live! 🎉
 
 ## Usage
 
-Let`s take a simple `whoami` container as an example:
+Let's take a simple `whoami` container as an example:
 
 ```yaml
 {{{ #://examples/whoami.docker-compose.yaml } }
