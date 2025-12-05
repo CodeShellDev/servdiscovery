@@ -1,5 +1,7 @@
 <img align="center" width="1048" height="512" alt="Dynamic service Discovery" src="https://github.com/CodeShellDev/servdiscovery/raw/refs/heads/main/logo/banner.png" />
 
+<h3 align="center">Dynamic service Discovery</h3>
+
 <p align="center">
 dynamic service discovery, container syncing, automatic updates
 </p>
