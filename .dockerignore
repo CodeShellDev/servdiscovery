@@ -1,1 +1,16 @@
-!app.py
+# env file
+*.env
+
+# Exclude git folders
+.git*
+!.github
+
+# Ignore yml files
+*.yaml
+*.yml
+
+# Markdown files
+*.md
+
+# Include data/
+!data/*

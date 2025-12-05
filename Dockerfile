@@ -1,13 +1,19 @@
-FROM python:3.12-alpine
+FROM alpine:3.22
+RUN apk --no-cache add ca-certificates
+
+ARG IMAGE_TAG
+ENV IMAGE_TAG=$IMAGE_TAG
+LABEL org.opencontainers.image.version=$IMAGE_TAG
+
+ARG TARGETOS
+ARG TARGETARCH
 
 WORKDIR /app
 
-RUN pip install docker
-
 COPY . .
 
-ENV PORT=4531
+COPY dist/${TARGETOS}/${TARGETARCH}/app .
 
-EXPOSE ${PORT}
+RUN rm dist/ -r
 
-CMD ["python", "app.py"]
+CMD ["./app"]
