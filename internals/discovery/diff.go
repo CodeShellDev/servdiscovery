@@ -49,6 +49,10 @@ func CleanDiff[T comparable](diff Diff[T]) Diff[T] {
 }
 
 func logDiff(id string, diff Diff[string]) {
+	if len(diff.Added) <= 0 && len(diff.Removed) <= 0 {
+		return
+	}
+
 	addedStr := strings.Join(diff.Added, ",")
 	removedStr := strings.Join(diff.Removed, ",")
 
