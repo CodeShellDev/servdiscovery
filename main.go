@@ -75,6 +75,8 @@ func main() {
 }
 
 func process(diff discovery.Diff[string]) {
+	log.Dev("Received diff: ", diff)
+
 	if len(diff.Added) <= 0 && len(diff.Removed) <= 0 {
 		log.Info("No changes detected, skipping...")
 		return
