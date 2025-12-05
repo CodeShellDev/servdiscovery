@@ -99,7 +99,7 @@ func SendDiff(serverName, endpoint, key string, diff Diff[string]) (*http.Respon
 	req.Header.Set("Content-Type", "application/json")
 
 	if key != "" {
-		req.Header.Set("Authorization", key)
+		req.Header.Set("Authorization", "Bearer " + key)
 	}
 
 	resp, err := client.Do(req)
