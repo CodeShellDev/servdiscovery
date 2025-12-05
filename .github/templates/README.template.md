@@ -59,7 +59,7 @@ Your discovery service is now live! 🎉
 Let's take a simple `whoami` container as an example:
 
 ```yaml
-{{{ #://examples/whoami.docker-compose.yaml } }
+{{{ #://examples/whoami.docker-compose.yaml }}}
 ```
 
 Whenever a new **Host-Rule** is added or updated, ServDiscovery will **automatically notify the configured endpoint**.  
