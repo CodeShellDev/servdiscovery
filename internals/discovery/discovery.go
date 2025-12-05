@@ -51,7 +51,7 @@ func GetAliveDiscovery() Diff[string] {
 		return Diff[string]{}
 	}
 
-	logger.Info("Found ", len(newContainers), " enabled containers")
+	logger.Debug("Found ", len(newContainers), " enabled containers")
 
 	for _, container := range newContainers {
 		router := getRouterHosts(container)
@@ -121,8 +121,12 @@ func getContainerDiff() (Diff[string], error) {
 
 	logger.Info("Found ", len(containers), " enabled containers")
 	
-	logger.Debug("Found ", len(containerDiff.Added), " added containers")
-	logger.Debug("Found ", len(containerDiff.Removed), " removed containers")
+	if len(containerDiff.Added) > 0 {
+		logger.Debug("Found ", len(containerDiff.Added), " added containers")
+	}
+	if len(containerDiff.Removed) > 0 {
+		logger.Debug("Found ", len(containerDiff.Removed), " removed containers")
+	}
 
 	for _, container := range newContainers {
 		router := getRouterHosts(container)
