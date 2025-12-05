@@ -1,129 +1,113 @@
+<div align="center">
+  <a href="https://github.com/codeshelldev/servdiscovery/releases">
+    <img 
+      src="https://img.shields.io/github/v/release/codeshelldev/servdiscovery?sort=semver&logo=github&label=Release" 
+      alt="GitHub release"
+    >
+  </a>
+  <a href="https://github.com/codeshelldev/servdiscovery/stargazers">
+    <img 
+      src="https://img.shields.io/github/stars/codeshelldev/servdiscovery?style=flat&logo=github&label=Stars" 
+      alt="GitHub stars"
+    >
+  </a>
+  <a href="https://github.com/codeshelldev/servdiscovery/pkgs/container/servdiscovery">
+    <img 
+      src="https://ghcr-badge.egpl.dev/codeshelldev/servdiscovery/size?color=%2344cc11&tag=latest&label=Image+Size&trim="
+      alt="Docker image size"
+    >
+  </a>
+  <a href="https://github.com/codeshelldev/servdiscovery/pkgs/container/servdiscovery">
+    <img 
+      src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fghcr-badge.elias.eu.org%2Fapi%2Fcodeshelldev%2Fservdiscovery%2Fservdiscovery&query=downloadCount&label=Downloads&color=2344cc11"
+      alt="Docker image Pulls"
+    >
+  </a>
+  <a href="./LICENSE">
+    <img 
+      src="https://img.shields.io/badge/License-MIT-green.svg"
+      alt="License: MIT"
+    >
+  </a>
+</div>
+
 # ServDiscovery
 
-ServDiscovery is a Discovery Service that keeps an Endpoint updated with active Hosts (of Services).
+**ServDiscovery** is a dynamic **Discovery Service** that keeps your endpoints in sync with active hosts of your services—perfect for modern, containerized environments. Think of it as the bridge between your services and your reverse proxy, ensuring traffic always finds the right destination.
 
 ## Installation
 
-> [!NOTE]
-> ServDiscovery only works with Traefik and not with **any** other Reverse Proxy due to `discover.enable` lable
+> [!IMPORTANT]
+> ServDiscovery works **only with Traefik**. It will **not** work with other reverse proxies due to the `discover.enable` label requirement.
 
-Get the latest `docker-compose.yaml` file:
+Get the latest `docker-compose.yaml`:
 
 ```yaml
-services:
-  discovery:
-    image: ghcr.io/codeshelldev/servdiscovery:latest
-    container_name: service-discovery
-    environment:
-      ENDPOINT: https://mydomain.com/ENDPOINT
-      ENDPOINT_KEY: MY_VERY_SECURE_KEY
-      ALIVE_UPDATE_INTERVAL: 60
-      SERVER_NAME: server-1
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+{{{ #://docker-compose.yaml }}}
 ```
+
+Then spin it up:
 
 ```bash
 docker compose up -d
 ```
 
+Your discovery service is now live! 🎉
+
 ## Usage
 
-Take this little `whoami` Container as an Example:
+Let`s take a simple `whoami` container as an example:
 
 ```yaml
-services:
-  whoami:
-    image: traefik/whoami:latest
-    container_name: whoami
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.whoami.rule=Host(`whoami.mydomain.com`)
-      - traefik.http.routers.whoami.entrypoints=websecure
-      - traefik.http.routers.whoami.tls=true
-      - traefik.http.routers.whoami.tls.certresolver=cloudflare
-      - traefik.http.routers.whoami.service=whoami-svc
-      - traefik.http.services.whoami-svc.loadbalancer.server.port=80
-      # Enable Discovery on this Container
-      - discovery.enable=true
-    networks:
-      - traefik
-
-networks:
-  traefik:
-    external: true
-    
+{{{ #://examples/whoami.docker-compose.yaml } }
 ```
 
-Whenever a new **Host-Rule** gets added / modified ServDiscovery will update the set Endpoint to notify of any new changes.
-This way the Endpoint can correctly route to different Hosts based on **SNI / Hostnames**.
+Whenever a new **Host-Rule** is added or updated, ServDiscovery will **automatically notify the configured endpoint**.  
+This ensures the endpoint can correctly route traffic based on **SNI / Hostnames**.
 
-## Endpoint
+## Endpoint Integration
 
-ServDiscovery sends requests to the Endpoint as a **JSON HTTP Request**:
+ServDiscovery communicates with your endpoint via **JSON HTTP Requests**:
 
 ```json
-{
-	"serverName": "server-1",
-	"diff": {
-		"added": [
-			"whoami.mydomain.com",
-			"website.mydomain.com",
-			"auth.mydomain.com"
-		],
-		"removed": [
-			"whoami-backup.mydomain.com",
-			"website-backup.mydomain.com",
-			"auth-backup.mydomain.com"
-		]
-	}
-}
+{{{ #://examples/payload.json }}}
 ```
 
-This example tells the Endpoint that...
+Example explanation:
 
-| Available            | Unavailable                 |
+| ✅ Available         | ❌ Unavailable              |
 | -------------------- | --------------------------- |
 | whoami.mydomain.com  | whoami-backup.mydomain.com  |
 | website.mydomain.com | website-backup.mydomain.com |
 | auth.mydomain.com    | auth-backup.mydomain.com    |
 
-... is (un)available
+This allows the endpoint (e.g., a load balancer) to remove `\*-backup` records from your registry and **update routable containers/services automatically**.
 
-This way (if the Endpoint is used by a LoadBalancer) the Owner of the Endpoint can now delete the `*-backup.mydomain.com` records from a Registry,
-thus updating the list of routable Containers / Services.
+### Integrations
+
+You can find example integrations inside of [examples/](./examples).
 
 ## Configuration
 
-### ENDPOINT_KEY
+### `ENDPOINT_KEY`
 
-The Endpoint Key is provided in the Authorization Header (via Bearer) during the POST request between the Endpoint and ServDiscovery.
-If no Key is provided ServDiscovery will leave out the Authorization Header.
+The endpoint key is used in the `Authorization` header (Bearer token) when ServDiscovery sends POST requests.  
+If no key is provided, the header is omitted.
 
-### DISCOVERY_INTERVAL
+### `DISCOVERY_INTERVAL`
 
-The Discovery Interval sets the Interval (in seconds) of which ServDiscovery will update the provided Endpoint.
+Time (in seconds) between updates to your endpoint.  
+**Default:** `60` seconds
 
-Default: `60`
+### `ALIVE_INTERVAL`
 
-### FULL_DISCOVERY_INTERVAL
-
-Sets the Interval for Full Disoveries.
-This tells ServDiscovery to send a Full Update of all the activate Containers in the `added` JSON Key.
-
-> [!IMPORTANT]
-> Must be set to a **fraction of** DISCOVERY_INTERVAL.
-> (example: `DISCOVERY_INTERVAL * 2`)
-> `FULL_DISCOVERY_INTERVAL / DISCOVERY_INTERVAL` must result in an int.
-> `FULL_DISCOVERY_INTERVAL` must be bigger than `DISCOVERY_INTERVAL`.
-
-Default: **Disabled**
+Time (in seconds) between full alive discoveries. ServDiscovery sends a **complete update** of all active containers in the `added` JSON key.  
+**Default:** `120` seconds
 
 ## Contributing
 
-Found a bug or have new ideas or enhancements for this Project?
-Feel free to open up an issue or create a Pull Request!
+Found a bug or have a brilliant idea? Contributions are welcome! Open an **issue** or create a **pull request** — your help makes this project better.
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+This project is licensed under the [MIT License](./LICENSE).
