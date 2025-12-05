@@ -30,13 +30,9 @@ func GetDiffDiscovery() Diff[string] {
 		return Diff[string]{}
 	}
 
-	logger.Dev("Raw: ", diff)
-
 	logger.Debug("Cleaning diff")
 
 	cleaned := CleanDiff(diff)
-
-	logger.Dev("Cleaned: ", cleaned)
 
 	return cleaned
 }
