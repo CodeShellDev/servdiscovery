@@ -82,7 +82,13 @@ func process(diff discovery.Diff[string]) {
 		return
 	}
 
-	log.Debug("Sending diff to ", config.ENV.ENDPOINT, " with ", "TOKEN:", config.ENV.ENDPOINT_KEY)
+	withOrWithout := "out"
+
+	if config.ENV.ENDPOINT_KEY != "" {
+		withOrWithout = ""
+	}
+
+	log.Debug("Sending diff to ", config.ENV.ENDPOINT, " with", withOrWithout, " Auth")
 
 	resp, err := discovery.SendDiff(config.ENV.SERVER_NAME, config.ENV.ENDPOINT, config.ENV.ENDPOINT_KEY, diff)
 
