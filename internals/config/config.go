@@ -9,6 +9,7 @@ import (
 )
 
 var ENV = &structure.ENV{
+	LOG_LEVEL: "info",
 	DISCOVERY_INTERVAL: 60,
 	ALIVE_INTERVAL: 120,
 }
