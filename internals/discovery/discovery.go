@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"slices"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/codeshelldev/gotl/pkg/jsonutils"
@@ -16,8 +17,8 @@ import (
 	"github.com/moby/moby/client"
 )
 
+var mu sync.RWMutex
 var containerHosts = map[string][]string{}
-
 var containers []container.Summary
 
 func GetDiffDiscovery() Diff[string] {
@@ -119,11 +120,17 @@ func getContainerDiff() (Diff[string], error) {
 		return Diff[string]{}, err
 	}
 
+	mu.RLock()
 	containerDiff := diffContainers(containers, newContainers)
+	mu.RUnlock()
 
+	mu.Lock()
 	containers = newContainers
+	mu.Unlock()
 
+	mu.RLock()
 	logger.Info("Found ", len(containers), " enabled containers")
+	mu.RUnlock()
 	
 	if len(containerDiff.Added) > 0 {
 		logger.Debug("Found ", len(containerDiff.Added), " added containers")
@@ -139,7 +146,9 @@ func getContainerDiff() (Diff[string], error) {
 		hostSlices := slices.Collect(seq)
 		hosts := slices.Concat(hostSlices...)
 
+		mu.RLock()
 		old, exists := containerHosts[container.ID]
+		mu.RUnlock()
 		if exists {
 			diff := GetDiff(old, hosts)
 
@@ -154,18 +163,24 @@ func getContainerDiff() (Diff[string], error) {
 			logger.Dev("!> With ", strings.Join(hosts, ","))
 		}
 
+		mu.Lock()
 		containerHosts[container.ID] = hosts
+		mu.Unlock()
 	}
 
 	for _, removed := range containerDiff.Removed {
+		mu.RLock()
 		host, exists := containerHosts[removed.ID]
+		mu.RUnlock()
 
 		if exists {
 			globalDiff.Removed = append(globalDiff.Removed, host...)
 
 			logger.Info("Removed ", removed.Names[0])
 
+			mu.Lock()
 			delete(containerHosts, removed.ID)
+			mu.Unlock()
 		}
 	}
 
