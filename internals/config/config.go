@@ -21,7 +21,7 @@ func Load() {
 
 	if discoveryIntervalStr != "" {
 		discoveryInterval, err := strconv.Atoi(discoveryIntervalStr)
-		if err != nil {
+		if err == nil {
 			ENV.DISCOVERY_INTERVAL = discoveryInterval
 		}
 	}
@@ -30,7 +30,7 @@ func Load() {
 
 	if aliveIntervalStr != "" {
 		aliveInterval, err := strconv.Atoi(aliveIntervalStr)
-		if err != nil {
+		if err == nil {
 			ENV.ALIVE_INTERVAL = aliveInterval
 		}
 	}
